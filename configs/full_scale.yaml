@@ -1,0 +1,23 @@
+compounds: 2000
+models:
+  - google/gemma-3n-E2B-it
+  # - openai/gpt-oss-20b
+  - Qwen/Qwen3-4B-Instruct-2507
+  - HuggingFaceTB/SmolLM3-3B
+  # - mistralai/Mistral-7B-Instruct-v0.2
+  - meta-llama/Llama-3.2-3B-Instruct
+  - amd/Instella-3B-Instruct
+  - microsoft/Phi-4-mini-instruct
+  # - bigscience/bloomz-3b
+  - ibm-granite/granite-3.3-2b-instruct
+  - tencent/Hunyuan-4B-Instruct
+  - microsoft/MediPhi
+  - utter-project/EuroLLM-1.7B-Instruct
+pubchem_xml_file: pubmed_compounds/Compound_000000001_000500000.xml
+t3db_xml_file: t3db/toxins.xml
+data_file: full_compounds.csv
+results_file: full_results.csv
+report_file: full_report.txt
+plots_file: full_plots.pdf
+max_smiles_length: 75
+min_smiles_length: 25

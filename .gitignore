@@ -1,9 +1,54 @@
-__pycache__
-.DS_Store
-.conda
-.vscode
+# Python
+__pycache__/
 *.pyc
-*.txt
+*.pyo
+*.pyd
+.Python
+env/
+.venv/
+.conda/
+
+# Dataset cache and large files
+datasets_cache/
+t3db/
+*.xml
+*.zip
+*.tar.gz
+
+# Results and temporary outputs
+*_results.csv
+*_report.txt
+*_plots.png
+combined_results.csv
+model_comparison_report.txt
+results_*/
+debug_*
+test_*
+cached_*
+
+# Keep sample files
+!sample_compounds.csv
+!requirements.txt
+!README.txt
+
+# IDE and OS
+.vscode/
+.DS_Store
+.idea/
+*.swp
+*.swo
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
+
+# Logs
+*.log
+*.tmp
+
+# Tables
 *.csv
+
+# Plots
 *.png
 *.pdf

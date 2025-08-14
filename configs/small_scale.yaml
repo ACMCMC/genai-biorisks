@@ -1,0 +1,11 @@
+compounds: 500
+models:
+  - google/gemma-3n-E2B-it
+pubchem_xml_file: pubmed_compounds/Compound_000000001_000500000.xml
+t3db_xml_file: t3db/toxins.xml
+data_file: small_compounds.csv
+results_file: small_results.csv
+report_file: small_report.txt
+plots_file: small_plots.pdf
+max_smiles_length: 75
+min_smiles_length: 25
