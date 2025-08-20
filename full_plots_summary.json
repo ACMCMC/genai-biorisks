@@ -1,0 +1,448 @@
+{
+  "models": {
+    "HuggingFaceTB/SmolLM3-3B": {
+      "evaluations": 2000,
+      "perplexity": {
+        "metric": "perplexity",
+        "toxic_n": 1000,
+        "nontoxic_n": 1000,
+        "toxic_mean": 8.713457795783707,
+        "toxic_std": 5.646145435557793,
+        "toxic_median": 7.310109764680227,
+        "nontoxic_mean": 8.20636577275447,
+        "nontoxic_std": 5.97507973366221,
+        "nontoxic_median": 7.043804509637136,
+        "mannwhitney_statistic": 541504.5,
+        "mannwhitney_p_value": 0.0013086063780140531,
+        "mannwhitney_significant": true,
+        "cliff_delta": 0.083009,
+        "cliff_delta_interpretation": "negligible"
+      },
+      "length_analysis": {
+        "length_stats": {
+          "toxic_mean_length": 41.517,
+          "toxic_std_length": 11.707506609009453,
+          "toxic_median_length": 40.0,
+          "nontoxic_mean_length": 43.454,
+          "nontoxic_std_length": 10.773666228355136,
+          "nontoxic_median_length": 42.0
+        },
+        "length_toxicity_test": {
+          "statistic": 441393.0,
+          "p_value": 5.61059120268659e-06,
+          "significant": true,
+          "cliff_delta": -0.117214
+        },
+        "length_perplexity_correlation": {
+          "correlation": -0.10485695525392114,
+          "p_value": 2.6096080048497267e-06,
+          "significant": true
+        },
+        "length_rank_correlation": {
+          "correlation": 0.03914668726736588,
+          "p_value": 0.0800718277090543,
+          "significant": false
+        },
+        "length_distribution": {
+          "min": 25,
+          "q25": 34.0,
+          "median": 41.0,
+          "q75": 49.0,
+          "max": 75,
+          "mean": 42.4855,
+          "std": 11.294714473483548
+        }
+      },
+      "risk": true
+    },
+    "Qwen/Qwen3-4B-Instruct-2507": {
+      "evaluations": 2000,
+      "perplexity": {
+        "metric": "perplexity",
+        "toxic_n": 1000,
+        "nontoxic_n": 1000,
+        "toxic_mean": 6.83354851357892,
+        "toxic_std": 5.983798959958139,
+        "toxic_median": 5.150842406926237,
+        "nontoxic_mean": 6.933614300894087,
+        "nontoxic_std": 8.23076155891426,
+        "nontoxic_median": 4.941446772985232,
+        "mannwhitney_statistic": 521085.5,
+        "mannwhitney_p_value": 0.10250478287543274,
+        "mannwhitney_significant": false,
+        "cliff_delta": 0.042171,
+        "cliff_delta_interpretation": "negligible"
+      },
+      "length_analysis": {
+        "length_stats": {
+          "toxic_mean_length": 41.517,
+          "toxic_std_length": 11.707506609009453,
+          "toxic_median_length": 40.0,
+          "nontoxic_mean_length": 43.454,
+          "nontoxic_std_length": 10.773666228355136,
+          "nontoxic_median_length": 42.0
+        },
+        "length_toxicity_test": {
+          "statistic": 441393.0,
+          "p_value": 5.61059120268659e-06,
+          "significant": true,
+          "cliff_delta": -0.117214
+        },
+        "length_perplexity_correlation": {
+          "correlation": -0.1255881190337731,
+          "p_value": 1.747694655023985e-08,
+          "significant": true
+        },
+        "length_rank_correlation": {
+          "correlation": -0.03671690516518973,
+          "p_value": 0.10068187572663667,
+          "significant": false
+        },
+        "length_distribution": {
+          "min": 25,
+          "q25": 34.0,
+          "median": 41.0,
+          "q75": 49.0,
+          "max": 75,
+          "mean": 42.4855,
+          "std": 11.294714473483548
+        }
+      },
+      "risk": false
+    },
+    "google/gemma-3n-E2B-it": {
+      "evaluations": 2000,
+      "perplexity": {
+        "metric": "perplexity",
+        "toxic_n": 1000,
+        "nontoxic_n": 1000,
+        "toxic_mean": 94.73924339115727,
+        "toxic_std": 386.85035890613585,
+        "toxic_median": 31.261374355596782,
+        "nontoxic_mean": 68.1298801749922,
+        "nontoxic_std": 157.23504644947903,
+        "nontoxic_median": 32.253716900748486,
+        "mannwhitney_statistic": 506114.5,
+        "mannwhitney_p_value": 0.635877627718163,
+        "mannwhitney_significant": false,
+        "cliff_delta": 0.012229,
+        "cliff_delta_interpretation": "negligible"
+      },
+      "length_analysis": {
+        "length_stats": {
+          "toxic_mean_length": 41.517,
+          "toxic_std_length": 11.707506609009453,
+          "toxic_median_length": 40.0,
+          "nontoxic_mean_length": 43.454,
+          "nontoxic_std_length": 10.773666228355136,
+          "nontoxic_median_length": 42.0
+        },
+        "length_toxicity_test": {
+          "statistic": 441393.0,
+          "p_value": 5.61059120268659e-06,
+          "significant": true,
+          "cliff_delta": -0.117214
+        },
+        "length_perplexity_correlation": {
+          "correlation": -0.11310557337595102,
+          "p_value": 3.949960346925858e-07,
+          "significant": true
+        },
+        "length_rank_correlation": {
+          "correlation": -2.6124841959716122e-05,
+          "p_value": 0.9990683837921982,
+          "significant": false
+        },
+        "length_distribution": {
+          "min": 25,
+          "q25": 34.0,
+          "median": 41.0,
+          "q75": 49.0,
+          "max": 75,
+          "mean": 42.4855,
+          "std": 11.294714473483548
+        }
+      },
+      "risk": false
+    },
+    "ibm-granite/granite-3.3-2b-instruct": {
+      "evaluations": 2000,
+      "perplexity": {
+        "metric": "perplexity",
+        "toxic_n": 1000,
+        "nontoxic_n": 1000,
+        "toxic_mean": 12.240082050236808,
+        "toxic_std": 39.35778017892108,
+        "toxic_median": 7.14774466158041,
+        "nontoxic_mean": 10.423093255770848,
+        "nontoxic_std": 19.79488014809845,
+        "nontoxic_median": 7.256768841650862,
+        "mannwhitney_statistic": 496636.5,
+        "mannwhitney_p_value": 0.7945305708391169,
+        "mannwhitney_significant": false,
+        "cliff_delta": -0.006727,
+        "cliff_delta_interpretation": "negligible"
+      },
+      "length_analysis": {
+        "length_stats": {
+          "toxic_mean_length": 41.517,
+          "toxic_std_length": 11.707506609009453,
+          "toxic_median_length": 40.0,
+          "nontoxic_mean_length": 43.454,
+          "nontoxic_std_length": 10.773666228355136,
+          "nontoxic_median_length": 42.0
+        },
+        "length_toxicity_test": {
+          "statistic": 441393.0,
+          "p_value": 5.61059120268659e-06,
+          "significant": true,
+          "cliff_delta": -0.117214
+        },
+        "length_perplexity_correlation": {
+          "correlation": -0.10737317198053464,
+          "p_value": 1.4883663927881013e-06,
+          "significant": true
+        },
+        "length_rank_correlation": {
+          "correlation": -0.005015864959779438,
+          "p_value": 0.8226192118307917,
+          "significant": false
+        },
+        "length_distribution": {
+          "min": 25,
+          "q25": 34.0,
+          "median": 41.0,
+          "q75": 49.0,
+          "max": 75,
+          "mean": 42.4855,
+          "std": 11.294714473483548
+        }
+      },
+      "risk": false
+    },
+    "meta-llama/Llama-3.2-3B-Instruct": {
+      "evaluations": 2000,
+      "perplexity": {
+        "metric": "perplexity",
+        "toxic_n": 1000,
+        "nontoxic_n": 1000,
+        "toxic_mean": 7.474648745217608,
+        "toxic_std": 6.558680256762584,
+        "toxic_median": 5.885318956739105,
+        "nontoxic_mean": 6.397984540590392,
+        "nontoxic_std": 5.482632951946438,
+        "nontoxic_median": 4.946265327376704,
+        "mannwhitney_statistic": 579971.0,
+        "mannwhitney_p_value": 5.905068490069797e-10,
+        "mannwhitney_significant": true,
+        "cliff_delta": 0.159942,
+        "cliff_delta_interpretation": "small"
+      },
+      "length_analysis": {
+        "length_stats": {
+          "toxic_mean_length": 41.517,
+          "toxic_std_length": 11.707506609009453,
+          "toxic_median_length": 40.0,
+          "nontoxic_mean_length": 43.454,
+          "nontoxic_std_length": 10.773666228355136,
+          "nontoxic_median_length": 42.0
+        },
+        "length_toxicity_test": {
+          "statistic": 441393.0,
+          "p_value": 5.61059120268659e-06,
+          "significant": true,
+          "cliff_delta": -0.117214
+        },
+        "length_perplexity_correlation": {
+          "correlation": -0.09850718468094595,
+          "p_value": 1.017792871801847e-05,
+          "significant": true
+        },
+        "length_rank_correlation": {
+          "correlation": -0.028350417064221096,
+          "p_value": 0.20503686312091404,
+          "significant": false
+        },
+        "length_distribution": {
+          "min": 25,
+          "q25": 34.0,
+          "median": 41.0,
+          "q75": 49.0,
+          "max": 75,
+          "mean": 42.4855,
+          "std": 11.294714473483548
+        }
+      },
+      "risk": true
+    },
+    "microsoft/MediPhi": {
+      "evaluations": 2000,
+      "perplexity": {
+        "metric": "perplexity",
+        "toxic_n": 1000,
+        "nontoxic_n": 1000,
+        "toxic_mean": 3.656015527191525,
+        "toxic_std": 2.5160211517973563,
+        "toxic_median": 3.068208221472181,
+        "nontoxic_mean": 3.763077591514189,
+        "nontoxic_std": 3.6591537697095045,
+        "nontoxic_median": 2.8570930375809884,
+        "mannwhitney_statistic": 511954.5,
+        "mannwhitney_p_value": 0.354590557483344,
+        "mannwhitney_significant": false,
+        "cliff_delta": 0.023909,
+        "cliff_delta_interpretation": "negligible"
+      },
+      "length_analysis": {
+        "length_stats": {
+          "toxic_mean_length": 41.517,
+          "toxic_std_length": 11.707506609009453,
+          "toxic_median_length": 40.0,
+          "nontoxic_mean_length": 43.454,
+          "nontoxic_std_length": 10.773666228355136,
+          "nontoxic_median_length": 42.0
+        },
+        "length_toxicity_test": {
+          "statistic": 441393.0,
+          "p_value": 5.61059120268659e-06,
+          "significant": true,
+          "cliff_delta": -0.117214
+        },
+        "length_perplexity_correlation": {
+          "correlation": -0.06193989734681515,
+          "p_value": 0.0055890352105409605,
+          "significant": true
+        },
+        "length_rank_correlation": {
+          "correlation": -0.0009765074657599069,
+          "p_value": 0.9651886167272554,
+          "significant": false
+        },
+        "length_distribution": {
+          "min": 25,
+          "q25": 34.0,
+          "median": 41.0,
+          "q75": 49.0,
+          "max": 75,
+          "mean": 42.4855,
+          "std": 11.294714473483548
+        }
+      },
+      "risk": false
+    },
+    "microsoft/Phi-4-mini-instruct": {
+      "evaluations": 2000,
+      "perplexity": {
+        "metric": "perplexity",
+        "toxic_n": 1000,
+        "nontoxic_n": 1000,
+        "toxic_mean": 3.096257558533652,
+        "toxic_std": 1.5922491551227702,
+        "toxic_median": 2.740939926541315,
+        "nontoxic_mean": 3.2826299265444105,
+        "nontoxic_std": 2.127172827737325,
+        "nontoxic_median": 2.7189462817793357,
+        "mannwhitney_statistic": 496181.0,
+        "mannwhitney_p_value": 0.767454650734318,
+        "mannwhitney_significant": false,
+        "cliff_delta": -0.007638,
+        "cliff_delta_interpretation": "negligible"
+      },
+      "length_analysis": {
+        "length_stats": {
+          "toxic_mean_length": 41.517,
+          "toxic_std_length": 11.707506609009453,
+          "toxic_median_length": 40.0,
+          "nontoxic_mean_length": 43.454,
+          "nontoxic_std_length": 10.773666228355136,
+          "nontoxic_median_length": 42.0
+        },
+        "length_toxicity_test": {
+          "statistic": 441393.0,
+          "p_value": 5.61059120268659e-06,
+          "significant": true,
+          "cliff_delta": -0.117214
+        },
+        "length_perplexity_correlation": {
+          "correlation": 0.02404960746121925,
+          "p_value": 0.2823683630900326,
+          "significant": false
+        },
+        "length_rank_correlation": {
+          "correlation": 0.042091426642259816,
+          "p_value": 0.05983016943899824,
+          "significant": false
+        },
+        "length_distribution": {
+          "min": 25,
+          "q25": 34.0,
+          "median": 41.0,
+          "q75": 49.0,
+          "max": 75,
+          "mean": 42.4855,
+          "std": 11.294714473483548
+        }
+      },
+      "risk": false
+    },
+    "utter-project/EuroLLM-1.7B-Instruct": {
+      "evaluations": 2000,
+      "perplexity": {
+        "metric": "perplexity",
+        "toxic_n": 1000,
+        "nontoxic_n": 1000,
+        "toxic_mean": 7.638798452831982,
+        "toxic_std": 4.356312412379789,
+        "toxic_median": 6.435416257648584,
+        "nontoxic_mean": 6.5643038832222445,
+        "nontoxic_std": 3.7667735430538163,
+        "nontoxic_median": 5.5802769091592666,
+        "mannwhitney_statistic": 587868.0,
+        "mannwhitney_p_value": 1.0140675494487918e-11,
+        "mannwhitney_significant": true,
+        "cliff_delta": 0.175736,
+        "cliff_delta_interpretation": "small"
+      },
+      "length_analysis": {
+        "length_stats": {
+          "toxic_mean_length": 41.517,
+          "toxic_std_length": 11.707506609009453,
+          "toxic_median_length": 40.0,
+          "nontoxic_mean_length": 43.454,
+          "nontoxic_std_length": 10.773666228355136,
+          "nontoxic_median_length": 42.0
+        },
+        "length_toxicity_test": {
+          "statistic": 441393.0,
+          "p_value": 5.61059120268659e-06,
+          "significant": true,
+          "cliff_delta": -0.117214
+        },
+        "length_perplexity_correlation": {
+          "correlation": -0.1247915827155669,
+          "p_value": 2.1526848074335508e-08,
+          "significant": true
+        },
+        "length_rank_correlation": {
+          "correlation": -0.04394990739589595,
+          "p_value": 0.04938873416537296,
+          "significant": true
+        },
+        "length_distribution": {
+          "min": 25,
+          "q25": 34.0,
+          "median": 41.0,
+          "q75": 49.0,
+          "max": 75,
+          "mean": 42.4855,
+          "std": 11.294714473483548
+        }
+      },
+      "risk": true
+    }
+  },
+  "summary": {
+    "total_models": 8,
+    "models_with_risk": 3
+  }
+}

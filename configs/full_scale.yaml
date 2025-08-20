@@ -19,5 +19,5 @@ data_file: full_compounds.csv
 results_file: full_results.csv
 report_file: full_report.txt
 plots_file: full_plots.pdf
-max_smiles_length: 75
-min_smiles_length: 25
+max_smiles_length: 250
+min_smiles_length: 50
