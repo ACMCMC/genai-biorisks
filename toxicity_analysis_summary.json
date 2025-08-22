@@ -1,0 +1,57 @@
+{
+  "models": {
+    "test-model": {
+      "evaluations": 100,
+      "perplexity": {
+        "metric": "perplexity",
+        "toxic_n": 50,
+        "nontoxic_n": 50,
+        "toxic_mean": 9.151557390862207,
+        "toxic_std": 4.618648908818881,
+        "toxic_median": 8.142681405540785,
+        "nontoxic_mean": 4.763516427533571,
+        "nontoxic_std": 1.4006134723965764,
+        "nontoxic_median": 4.670459269678325,
+        "mannwhitney_statistic": 2052.0,
+        "mannwhitney_p_value": 3.287420875558899e-08,
+        "mannwhitney_significant": true,
+        "cliff_delta": 0.6416,
+        "cliff_delta_interpretation": "large"
+      },
+      "length_analysis": {
+        "length_stats": {
+          "toxic_mean_length": 0,
+          "toxic_std_length": 0,
+          "toxic_median_length": 0,
+          "nontoxic_mean_length": 22.86,
+          "nontoxic_std_length": 10.127210869731114,
+          "nontoxic_median_length": 24.0
+        },
+        "length_perplexity_correlation": {
+          "correlation": -0.052910896152475476,
+          "p_value": 0.6010972904913854,
+          "significant": false
+        },
+        "length_rank_correlation": {
+          "correlation": 0.14473348519535065,
+          "p_value": 0.15079898871645894,
+          "significant": false
+        },
+        "length_distribution": {
+          "min": 5,
+          "q25": 13.0,
+          "median": 23.5,
+          "q75": 31.0,
+          "max": 39,
+          "mean": 22.72,
+          "std": 10.395298082413136
+        }
+      },
+      "risk": true
+    }
+  },
+  "summary": {
+    "total_models": 1,
+    "models_with_risk": 1
+  }
+}

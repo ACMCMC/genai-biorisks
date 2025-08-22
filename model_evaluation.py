@@ -27,7 +27,7 @@ class ToxicityEvaluator:
         self.tokenizer: PreTrainedTokenizer = AutoTokenizer.from_pretrained(model_name)
         self.model = AutoModelForCausalLM.from_pretrained(
             model_name,
-            torch_dtype=torch.float16 if self.device == "cuda" else torch.float32,
+            torch_dtype=torch.float16 if self.device == "cuda" else torch.float32, attn_implementation='eager'
         )
 
         # Move to device
@@ -108,45 +108,60 @@ class ToxicityEvaluator:
             iupac_name=iupac_name,
         )
 
-        # Tokenize the full conversation and user prompt separately
-        full_tokens = self.tokenizer.encode(text=full_conversation, return_tensors="pt")
-        user_tokens = self.tokenizer.encode(text=user_prompt, return_tensors="pt")
+        # Tokenize the full conversation and user prompt using offsets so we can
+        # map tokens to character spans in the original text.
+        full_enc = self.tokenizer(text=full_conversation, return_offsets_mapping=True, add_special_tokens=True)
+        user_enc = self.tokenizer(text=user_prompt, add_special_tokens=True)
+
+        full_ids = full_enc["input_ids"]
+        full_offsets = full_enc.get("offset_mapping")
+        user_len = len(user_enc["input_ids"])
 
         # The assistant response (SMILES) tokens are everything after the user prompt
-        user_length = user_tokens.shape[1]
-        assistant_tokens = full_tokens[:, user_length:]
+        assistant_ids = full_ids[user_len:]
+        assistant_offsets = full_offsets[user_len:] if full_offsets is not None else None
 
-        # If no assistant tokens, nothing to score
-        if assistant_tokens.shape[1] == 0:
+        if len(assistant_ids) == 0:
             return float("inf"), float("inf")
 
-        # Map tokens to decoded characters and keep only the tokens that cover
-        # up to the cutoff number of characters. char_cutoff is required.
         if not isinstance(char_cutoff, int) or char_cutoff <= 0:
             raise ValueError("char_cutoff must be a positive integer")
-            # Convert token ids to python list for iteration
-            token_id_list = assistant_tokens[0].tolist()
-            kept_count = 0
-            cum_text = ""
 
-            # Accumulate decoded text token-by-token to measure character length
-            for idx in range(len(token_id_list)):
-                # decode only up to current token to get correct concatenation
-                # small decode calls are acceptable here; simple and robust.
-                decoded = self.tokenizer.decode(token_id_list[0 : idx + 1], skip_special_tokens=True)
-                # Use the decoded assistant substring only (SMILES may be mixed with punctuation)
+        # Find SMILES character region within the full conversation
+        smiles_start = full_conversation.find(target_smiles)
+        kept_count = 0
+
+        if smiles_start == -1 or assistant_offsets is None:
+            # Fallback: if offsets missing or SMILES not found, decode-prefix until cutoff
+            kept_count = 0
+            for idx in range(len(assistant_ids)):
+                decoded = self.tokenizer.decode(assistant_ids[0 : idx + 1], skip_special_tokens=True)
                 if len(decoded) <= char_cutoff:
                     kept_count = idx + 1
-                    cum_text = decoded
+                else:
+                    break
+        else:
+            cutoff_pos = smiles_start + char_cutoff
+            # Include only tokens that are fully inside the SMILES prefix up to cutoff
+            for idx, offs in enumerate(assistant_offsets):
+                if not offs or len(offs) != 2:
+                    continue
+                start, end = offs
+                # skip tokens entirely before SMILES
+                if end <= smiles_start:
+                    continue
+                # include token only if it ends within the cutoff boundary
+                if end <= cutoff_pos:
+                    kept_count = idx + 1
                 else:
                     break
 
-            # If no tokens remain within the cutoff, return infinities
-            if kept_count == 0:
-                return float("inf"), float("inf")
+        if kept_count == 0:
+            return float("inf"), float("inf")
 
-            # Truncate assistant_tokens to the kept count
-            assistant_tokens = assistant_tokens[:, :kept_count]
+        # Build tensors for model input and labels
+        full_tokens = torch.tensor([full_ids])
+        assistant_tokens = torch.tensor([assistant_ids[:kept_count]])
 
         # Move to device
         full_tokens = full_tokens.to(self.device)
@@ -159,7 +174,7 @@ class ToxicityEvaluator:
             # Note: since assistant_tokens may have been truncated we need to slice logits
             # to match the new assistant length.
             assistant_len = assistant_tokens.shape[1]
-            shift_logits = logits[:, user_length - 1 : user_length - 1 + assistant_len, :].contiguous()
+            shift_logits = logits[:, user_len - 1 : user_len - 1 + assistant_len, :].contiguous()
             shift_labels = assistant_tokens.to(self.device).contiguous()
 
             # Calculate cross entropy loss for all tokens at once

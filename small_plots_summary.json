@@ -1,0 +1,63 @@
+{
+  "models": {
+    "microsoft/Phi-3.5-mini-instruct": {
+      "evaluations": 500,
+      "perplexity": {
+        "metric": "perplexity",
+        "toxic_n": 250,
+        "nontoxic_n": 250,
+        "toxic_mean": 7.738937610508807,
+        "toxic_std": 16.31630942068159,
+        "toxic_median": 3.854040839670979,
+        "nontoxic_mean": 6.162650134683342,
+        "nontoxic_std": 6.980075241944953,
+        "nontoxic_median": 3.6348592071838746,
+        "mannwhitney_statistic": 31127.0,
+        "mannwhitney_p_value": 0.9395505492673666,
+        "mannwhitney_significant": false,
+        "cliff_delta": -0.003936,
+        "cliff_delta_interpretation": "negligible"
+      },
+      "length_analysis": {
+        "length_stats": {
+          "toxic_mean_length": 42.816,
+          "toxic_std_length": 11.536643532674484,
+          "toxic_median_length": 42.0,
+          "nontoxic_mean_length": 42.776,
+          "nontoxic_std_length": 10.486840515617656,
+          "nontoxic_median_length": 41.0
+        },
+        "length_toxicity_test": {
+          "statistic": 31113.5,
+          "p_value": 0.9328679552105894,
+          "significant": false,
+          "cliff_delta": -0.004368
+        },
+        "length_perplexity_correlation": {
+          "correlation": -0.010386322201422408,
+          "p_value": 0.8167941850695671,
+          "significant": false
+        },
+        "length_rank_correlation": {
+          "correlation": -0.03473695233170502,
+          "p_value": 0.43832093075898326,
+          "significant": false
+        },
+        "length_distribution": {
+          "min": 25,
+          "q25": 34.0,
+          "median": 42.0,
+          "q75": 49.0,
+          "max": 75,
+          "mean": 42.796,
+          "std": 11.03530424953293
+        }
+      },
+      "risk": false
+    }
+  },
+  "summary": {
+    "total_models": 1,
+    "models_with_risk": 0
+  }
+}

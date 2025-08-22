@@ -345,48 +345,77 @@ class ToxicityAnalyzer:
         metric: 'perplexity' or 'mean_rank'
         """
 
-        # Select values per toxicity type
-        toxic_key = 'toxic_health'
-        toxic_mask = (self.df['toxicity_type'] == toxic_key)
+        # Select values per toxicity type, accept legacy 'toxic' label as well
+        toxic_mask = self.df['toxicity_type'].isin(['toxic_health', 'toxic'])
         nontoxic_mask = (self.df['toxicity_type'] == 'nontoxic')
 
         vals_toxic = self.df.loc[toxic_mask, metric].values
         vals_nontoxic = self.df.loc[nontoxic_mask, metric].values
 
-        # Remove infinite values
+        # Remove infinite / NaN values
         vals_toxic = vals_toxic[np.isfinite(vals_toxic)]
         vals_nontoxic = vals_nontoxic[np.isfinite(vals_nontoxic)]
 
-        # Determine bins if enough data, otherwise use default
-        if len(vals_toxic) > 0 and len(vals_nontoxic) > 0:
-            vmin = min(np.min(vals_toxic), np.min(vals_nontoxic))
-            vmax = max(np.max(vals_toxic), np.max(vals_nontoxic))
-            bins = np.linspace(vmin, vmax, 20)
+        # Ensure we always use 50 bins and align the bins between the two groups.
+        # For log-scaled x-axis we compute log-spaced bin edges from the combined positive values.
+        bins_count = 50
+        combined = np.concatenate([vals_toxic, vals_nontoxic]) if len(vals_toxic) + len(vals_nontoxic) > 0 else np.array([])
+        # Work only with positive finite values for log spacing; fallback to linear bins if no positives
+        pos = combined[np.isfinite(combined) & (combined > 0)]
+        if len(pos) > 0:
+            vmin = float(np.min(pos))
+            vmax = float(np.max(pos))
+            # avoid zero range
+            if vmin <= 0:
+                vmin = np.nextafter(0.0, 1.0)
+            if vmax <= vmin:
+                vmax = vmin * 10.0
+            bins = np.logspace(np.log10(vmin), np.log10(vmax), num=bins_count)
+            x_limits = (bins[0], bins[-1])
         else:
-            bins = 20
+            # no positive values, use linear bins on whatever finite values exist
+            finite = combined[np.isfinite(combined)]
+            if len(finite) > 0:
+                vmin = float(np.min(finite))
+                vmax = float(np.max(finite))
+                if vmax == vmin:
+                    vmax = vmin + 1.0
+                bins = np.linspace(vmin, vmax, num=bins_count)
+                x_limits = (bins[0], bins[-1])
+            else:
+                bins = bins_count
+                x_limits = (None, None)
 
         # Create stacked figure with shared x-axis
         fig, axes = plt.subplots(2, 1, figsize=(10, 6), sharex=True, gridspec_kw={'height_ratios': [3, 1]})
-        fig.suptitle(f"Toxicity Assessment - {model_name} - {metric}", fontsize=14, fontweight='bold')
+        # fig.suptitle(f"Toxicity Assessment - {model_name} - {metric}", fontsize=14, fontweight='bold')
 
         ax_hist = axes[0]
         ax_box = axes[1]
 
-        # Histogram
-        if len(vals_toxic) > 0:
-            ax_hist.hist(vals_toxic, alpha=0.7, label='Toxic (Health)', bins=bins,
-                         color=COLORS['toxic'], edgecolor='white', linewidth=0.5)
-        if len(vals_nontoxic) > 0:
-            ax_hist.hist(vals_nontoxic, alpha=0.7, label='Non-toxic', bins=bins,
-                         color=COLORS['nontoxic'], edgecolor='white', linewidth=0.5)
+        # Histogram, use the same bins for both groups so intervals align
+        if isinstance(bins, (list, np.ndarray)):
+            if len(vals_toxic) > 0:
+                ax_hist.hist(vals_toxic, alpha=0.7, label='Toxic (Health)', bins=bins,
+                             color=COLORS['toxic'], edgecolor='white', linewidth=0.5)
+            if len(vals_nontoxic) > 0:
+                ax_hist.hist(vals_nontoxic, alpha=0.7, label='Non-toxic', bins=bins,
+                             color=COLORS['nontoxic'], edgecolor='white', linewidth=0.5)
+        else:
+            # fallback if bins is an integer (no data case)
+            if len(vals_toxic) > 0:
+                ax_hist.hist(vals_toxic, alpha=0.7, label='Toxic (Health)', bins=bins_count,
+                             color=COLORS['toxic'], edgecolor='white', linewidth=0.5)
+            if len(vals_nontoxic) > 0:
+                ax_hist.hist(vals_nontoxic, alpha=0.7, label='Non-toxic', bins=bins_count,
+                             color=COLORS['nontoxic'], edgecolor='white', linewidth=0.5)
 
-        ax_hist.set_ylabel('Frequency', fontsize=11)
+        # ax_hist.set_ylabel('Frequency', fontsize=11)
         ax_hist.legend(frameon=True, fancybox=True, shadow=True)
         ax_hist.grid(True, alpha=0.3)
 
-        # Apply log scale for perplexity histogram x-axis
-        if metric == 'perplexity':
-            ax_hist.set_xscale('log')
+        # Apply log scale for histogram x-axis
+        ax_hist.set_xscale('log')
 
         # Horizontal boxplot sharing x-axis
         box_data = []
@@ -407,13 +436,15 @@ class ToxicityAnalyzer:
                 box.set_facecolor(color)
                 box.set_alpha(0.7)
 
-        ax_box.set_xlabel(metric.replace('_', ' ').title(), fontsize=12)
+        # ax_box.set_xlabel(metric.replace('_', ' ').title(), fontsize=12)
         ax_box.set_yticks([])  # remove y ticks for compactness
         ax_box.grid(True, alpha=0.2)
 
-        # For perplexity use log scale on x-axis for the boxplot as well
-        if metric == 'perplexity':
-            ax_box.set_xscale('log')
+        # Ensure boxplot uses same x-scale and limits so boxes align with histogram intervals
+        ax_box.set_xscale('log')
+        if x_limits[0] is not None and x_limits[1] is not None:
+            ax_hist.set_xlim(x_limits)
+            ax_box.set_xlim(x_limits)
 
         plt.tight_layout(rect=[0, 0.03, 1, 0.95])
 

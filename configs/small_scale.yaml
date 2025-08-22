@@ -1,6 +1,6 @@
 compounds: 500
 models:
-  - google/gemma-3n-E2B-it
+  - microsoft/Phi-3.5-mini-instruct
 pubchem_xml_file: pubmed_compounds/Compound_000000001_000500000.xml
 t3db_xml_file: t3db/toxins.xml
 data_file: small_compounds.csv

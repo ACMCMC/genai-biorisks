@@ -9,7 +9,7 @@ env/
 .conda/
 
 # Dataset cache and large files
-datasets_cache/
+datasets_cache*
 t3db/
 *.xml
 *.zip

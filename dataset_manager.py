@@ -49,13 +49,13 @@ class DatasetManager:
             seed=2262,
             min_smiles_length=min_smiles_length,
             max_smiles_length=max_smiles_length,
-            max_compound_cids_to_extract=total_compounds * 10,
+            max_compound_cids_to_extract=total_compounds * 20,
         )
         compounds_df = collector.collect_compounds_efficient(
             target_toxic_health=total_compounds // 2,
             target_toxic_physical=0,
             target_nontoxic=total_compounds // 2,
-            max_attempts=total_compounds * 10,
+            max_attempts=total_compounds * 20,
         )
 
         # Assert we have the expected counts of each type
