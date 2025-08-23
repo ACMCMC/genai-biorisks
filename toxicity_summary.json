@@ -20,12 +20,18 @@
       },
       "length_analysis": {
         "length_stats": {
-          "toxic_mean_length": 0,
-          "toxic_std_length": 0,
-          "toxic_median_length": 0,
+          "toxic_mean_length": 22.58,
+          "toxic_std_length": 10.552895337299615,
+          "toxic_median_length": 23.0,
           "nontoxic_mean_length": 22.86,
           "nontoxic_std_length": 10.127210869731114,
           "nontoxic_median_length": 24.0
+        },
+        "length_toxicity_test": {
+          "statistic": 1229.5,
+          "p_value": 0.890257916370552,
+          "significant": false,
+          "cliff_delta": -0.0164
         },
         "length_perplexity_correlation": {
           "correlation": -0.052910896152475476,

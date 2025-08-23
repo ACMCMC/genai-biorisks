@@ -132,9 +132,17 @@ class ToxicityAnalyzer:
             "toxic_mean": float(np.mean(toxic_values)) if len(toxic_values) > 0 else float('nan'),
             "toxic_std": float(np.std(toxic_values)) if len(toxic_values) > 0 else float('nan'),
             "toxic_median": float(np.median(toxic_values)) if len(toxic_values) > 0 else float('nan'),
+            # quartiles and interquartile range for toxic values
+            "toxic_q25": float(np.percentile(toxic_values, 25)) if len(toxic_values) > 0 else float('nan'),
+            "toxic_q75": float(np.percentile(toxic_values, 75)) if len(toxic_values) > 0 else float('nan'),
+            "toxic_iqr": float(np.percentile(toxic_values, 75) - np.percentile(toxic_values, 25)) if len(toxic_values) > 0 else float('nan'),
             "nontoxic_mean": float(np.mean(nontoxic_values)) if len(nontoxic_values) > 0 else float('nan'),
             "nontoxic_std": float(np.std(nontoxic_values)) if len(nontoxic_values) > 0 else float('nan'),
             "nontoxic_median": float(np.median(nontoxic_values)) if len(nontoxic_values) > 0 else float('nan'),
+            # quartiles and interquartile range for non-toxic values
+            "nontoxic_q25": float(np.percentile(nontoxic_values, 25)) if len(nontoxic_values) > 0 else float('nan'),
+            "nontoxic_q75": float(np.percentile(nontoxic_values, 75)) if len(nontoxic_values) > 0 else float('nan'),
+            "nontoxic_iqr": float(np.percentile(nontoxic_values, 75) - np.percentile(nontoxic_values, 25)) if len(nontoxic_values) > 0 else float('nan'),
         }
 
         # Mann-Whitney U test
@@ -170,13 +178,20 @@ class ToxicityAnalyzer:
         toxic_lengths = clean_df[clean_df['toxicity_type'] == 'toxic_health']['smiles_length']
         nontoxic_lengths = clean_df[clean_df['toxicity_type'] == 'nontoxic']['smiles_length']
         
+        # include quartiles and IQR for length stats
         results['length_stats'] = {
             'toxic_mean_length': np.mean(toxic_lengths) if len(toxic_lengths) > 0 else 0,
             'toxic_std_length': np.std(toxic_lengths) if len(toxic_lengths) > 0 else 0,
             'toxic_median_length': np.median(toxic_lengths) if len(toxic_lengths) > 0 else 0,
-            'nontoxic_mean_length': np.mean(nontoxic_lengths),
-            'nontoxic_std_length': np.std(nontoxic_lengths),
-            'nontoxic_median_length': np.median(nontoxic_lengths),
+            'toxic_q25_length': np.percentile(toxic_lengths, 25) if len(toxic_lengths) > 0 else 0,
+            'toxic_q75_length': np.percentile(toxic_lengths, 75) if len(toxic_lengths) > 0 else 0,
+            'toxic_iqr_length': (np.percentile(toxic_lengths, 75) - np.percentile(toxic_lengths, 25)) if len(toxic_lengths) > 0 else 0,
+            'nontoxic_mean_length': np.mean(nontoxic_lengths) if len(nontoxic_lengths) > 0 else 0,
+            'nontoxic_std_length': np.std(nontoxic_lengths) if len(nontoxic_lengths) > 0 else 0,
+            'nontoxic_median_length': np.median(nontoxic_lengths) if len(nontoxic_lengths) > 0 else 0,
+            'nontoxic_q25_length': np.percentile(nontoxic_lengths, 25) if len(nontoxic_lengths) > 0 else 0,
+            'nontoxic_q75_length': np.percentile(nontoxic_lengths, 75) if len(nontoxic_lengths) > 0 else 0,
+            'nontoxic_iqr_length': (np.percentile(nontoxic_lengths, 75) - np.percentile(nontoxic_lengths, 25)) if len(nontoxic_lengths) > 0 else 0,
         }
         
         # Test if toxic_health vs nontoxic compounds have different lengths
@@ -213,7 +228,9 @@ class ToxicityAnalyzer:
             'q75': clean_df['smiles_length'].quantile(0.75),
             'max': clean_df['smiles_length'].max(),
             'mean': clean_df['smiles_length'].mean(),
-            'std': clean_df['smiles_length'].std()
+            'std': clean_df['smiles_length'].std(),
+            # interquartile range
+            'iqr': float(clean_df['smiles_length'].quantile(0.75) - clean_df['smiles_length'].quantile(0.25))
         }
         
         return results

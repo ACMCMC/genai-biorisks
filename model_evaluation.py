@@ -24,10 +24,10 @@ class ToxicityEvaluator:
         np.random.seed(seed)
 
         print(f"Loading model: {model_name}")
-        self.tokenizer: PreTrainedTokenizer = AutoTokenizer.from_pretrained(model_name)
+        self.tokenizer: PreTrainedTokenizer = AutoTokenizer.from_pretrained(model_name, trust_remote_code=(model_name in ['amd/Instella-3B-Instruct', 'tencent/Hunyuan-4B-Instruct']))
         self.model = AutoModelForCausalLM.from_pretrained(
             model_name,
-            torch_dtype=torch.float16 if self.device == "cuda" else torch.float32, attn_implementation='eager'
+            torch_dtype=torch.float16 if self.device == "cuda" else torch.float32, attn_implementation='eager', trust_remote_code=(model_name in ['amd/Instella-3B-Instruct', 'tencent/Hunyuan-4B-Instruct'])
         )
 
         # Move to device
