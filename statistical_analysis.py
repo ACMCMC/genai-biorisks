@@ -132,17 +132,9 @@ class ToxicityAnalyzer:
             "toxic_mean": float(np.mean(toxic_values)) if len(toxic_values) > 0 else float('nan'),
             "toxic_std": float(np.std(toxic_values)) if len(toxic_values) > 0 else float('nan'),
             "toxic_median": float(np.median(toxic_values)) if len(toxic_values) > 0 else float('nan'),
-            # quartiles and interquartile range for toxic values
-            "toxic_q25": float(np.percentile(toxic_values, 25)) if len(toxic_values) > 0 else float('nan'),
-            "toxic_q75": float(np.percentile(toxic_values, 75)) if len(toxic_values) > 0 else float('nan'),
-            "toxic_iqr": float(np.percentile(toxic_values, 75) - np.percentile(toxic_values, 25)) if len(toxic_values) > 0 else float('nan'),
             "nontoxic_mean": float(np.mean(nontoxic_values)) if len(nontoxic_values) > 0 else float('nan'),
             "nontoxic_std": float(np.std(nontoxic_values)) if len(nontoxic_values) > 0 else float('nan'),
             "nontoxic_median": float(np.median(nontoxic_values)) if len(nontoxic_values) > 0 else float('nan'),
-            # quartiles and interquartile range for non-toxic values
-            "nontoxic_q25": float(np.percentile(nontoxic_values, 25)) if len(nontoxic_values) > 0 else float('nan'),
-            "nontoxic_q75": float(np.percentile(nontoxic_values, 75)) if len(nontoxic_values) > 0 else float('nan'),
-            "nontoxic_iqr": float(np.percentile(nontoxic_values, 75) - np.percentile(nontoxic_values, 25)) if len(nontoxic_values) > 0 else float('nan'),
         }
 
         # Mann-Whitney U test
@@ -174,24 +166,17 @@ class ToxicityAnalyzer:
         
         results = {}
         
-        # Length statistics by toxicity type (toxic_health vs nontoxic only)
-        toxic_lengths = clean_df[clean_df['toxicity_type'] == 'toxic_health']['smiles_length']
+        # Length statistics by toxicity type (toxic_health/toxic vs nontoxic only)
+        toxic_lengths = clean_df[clean_df['toxicity_type'].isin(['toxic_health', 'toxic'])]['smiles_length']
         nontoxic_lengths = clean_df[clean_df['toxicity_type'] == 'nontoxic']['smiles_length']
         
-        # include quartiles and IQR for length stats
         results['length_stats'] = {
             'toxic_mean_length': np.mean(toxic_lengths) if len(toxic_lengths) > 0 else 0,
             'toxic_std_length': np.std(toxic_lengths) if len(toxic_lengths) > 0 else 0,
             'toxic_median_length': np.median(toxic_lengths) if len(toxic_lengths) > 0 else 0,
-            'toxic_q25_length': np.percentile(toxic_lengths, 25) if len(toxic_lengths) > 0 else 0,
-            'toxic_q75_length': np.percentile(toxic_lengths, 75) if len(toxic_lengths) > 0 else 0,
-            'toxic_iqr_length': (np.percentile(toxic_lengths, 75) - np.percentile(toxic_lengths, 25)) if len(toxic_lengths) > 0 else 0,
             'nontoxic_mean_length': np.mean(nontoxic_lengths) if len(nontoxic_lengths) > 0 else 0,
             'nontoxic_std_length': np.std(nontoxic_lengths) if len(nontoxic_lengths) > 0 else 0,
             'nontoxic_median_length': np.median(nontoxic_lengths) if len(nontoxic_lengths) > 0 else 0,
-            'nontoxic_q25_length': np.percentile(nontoxic_lengths, 25) if len(nontoxic_lengths) > 0 else 0,
-            'nontoxic_q75_length': np.percentile(nontoxic_lengths, 75) if len(nontoxic_lengths) > 0 else 0,
-            'nontoxic_iqr_length': (np.percentile(nontoxic_lengths, 75) - np.percentile(nontoxic_lengths, 25)) if len(nontoxic_lengths) > 0 else 0,
         }
         
         # Test if toxic_health vs nontoxic compounds have different lengths
@@ -204,34 +189,57 @@ class ToxicityAnalyzer:
                 'cliff_delta': cliff_delta(toxic_lengths.values, nontoxic_lengths.values)
             }
         
-        # Correlation between length and perplexity
-        length_perp_corr, length_perp_p = stats.pearsonr(clean_df['smiles_length'], clean_df['perplexity'])
-        results['length_perplexity_correlation'] = {
-            'correlation': length_perp_corr,
-            'p_value': length_perp_p,
-            'significant': length_perp_p < 0.05
-        }
+        # Correlation between length and perplexity (need at least 2 points)
+        if len(clean_df) >= 2:
+            length_perp_corr, length_perp_p = stats.pearsonr(clean_df['smiles_length'], clean_df['perplexity'])
+            results['length_perplexity_correlation'] = {
+                'correlation': length_perp_corr,
+                'p_value': length_perp_p,
+                'significant': length_perp_p < 0.05
+            }
+        else:
+            results['length_perplexity_correlation'] = {
+                'correlation': float('nan'),
+                'p_value': float('nan'),
+                'significant': False
+            }
         
-        # Correlation between length and mean rank
-        length_rank_corr, length_rank_p = stats.pearsonr(clean_df['smiles_length'], clean_df['mean_rank'])
-        results['length_rank_correlation'] = {
-            'correlation': length_rank_corr,
-            'p_value': length_rank_p,
-            'significant': length_rank_p < 0.05
-        }
+        # Correlation between length and mean rank (need at least 2 points)
+        if len(clean_df) >= 2:
+            length_rank_corr, length_rank_p = stats.pearsonr(clean_df['smiles_length'], clean_df['mean_rank'])
+            results['length_rank_correlation'] = {
+                'correlation': length_rank_corr,
+                'p_value': length_rank_p,
+                'significant': length_rank_p < 0.05
+            }
+        else:
+            results['length_rank_correlation'] = {
+                'correlation': float('nan'),
+                'p_value': float('nan'),
+                'significant': False
+            }
         
         # Length distribution quantiles
-        results['length_distribution'] = {
-            'min': clean_df['smiles_length'].min(),
-            'q25': clean_df['smiles_length'].quantile(0.25),
-            'median': clean_df['smiles_length'].median(),
-            'q75': clean_df['smiles_length'].quantile(0.75),
-            'max': clean_df['smiles_length'].max(),
-            'mean': clean_df['smiles_length'].mean(),
-            'std': clean_df['smiles_length'].std(),
-            # interquartile range
-            'iqr': float(clean_df['smiles_length'].quantile(0.75) - clean_df['smiles_length'].quantile(0.25))
-        }
+        if len(clean_df) > 0:
+            results['length_distribution'] = {
+                'min': clean_df['smiles_length'].min(),
+                'q25': clean_df['smiles_length'].quantile(0.25),
+                'median': clean_df['smiles_length'].median(),
+                'q75': clean_df['smiles_length'].quantile(0.75),
+                'max': clean_df['smiles_length'].max(),
+                'mean': clean_df['smiles_length'].mean(),
+                'std': clean_df['smiles_length'].std()
+            }
+        else:
+            results['length_distribution'] = {
+                'min': float('nan'),
+                'q25': float('nan'),
+                'median': float('nan'),
+                'q75': float('nan'),
+                'max': float('nan'),
+                'mean': float('nan'),
+                'std': float('nan')
+            }
         
         return results
 
